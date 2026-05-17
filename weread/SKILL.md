@@ -1,21 +1,21 @@
 ---
 name: 微信读书
 description: 微信读书助手 — 搜索书籍、管理书架、查看笔记划线、浏览书评、阅读统计、发现推荐好书
-version: 1.1.0
+version: 1.2.0
 ---
 
 # WeRead — 微信读书助手
 
-通过 `weread.py` CLI 调用微信读书接口，提供搜索、书架、笔记、书评等能力。
+通过 `scripts/weread.py` CLI 调用微信读书接口，提供搜索、书架、笔记、书评等能力。
 
 **强制性规则：所有微信读书操作必须通过 CLI 完成，禁止手写 curl 或直接调 API。CLI 已内置鉴权、版本上报、分页、格式化输出、深度链接等所有逻辑。**
 
-> 需要 WEREAD_API_KEY（已配置在 ~/.hermes/.env）。
+> 需要 `WEREAD_API_KEY` 环境变量（从微信读书抓包获取 `sk` 值）。
 
 ## 快速参考
 
 ```bash
-WR=~/.hermes/skills/weread/weread.py
+WR=./scripts/weread.py
 
 # 搜索
 $WR search <关键词> [--scope 10] [--page 1] [--per-page 10]
@@ -52,7 +52,7 @@ $WR search 三体 --scope 6                  # 作者
 $WR search 三体 --per-page 5 --page 2      # 分页
 ```
 
-scope 选择指引详见 `search.md`。CLI 输出包含书名、作者、评分、在读人数、简介、weread:// 打开链接。
+scope 选择指引详见 `references/search.md`。CLI 输出包含书名、作者、评分、在读人数、简介、weread:// 打开链接。
 
 ### shelf — 书架
 
@@ -116,6 +116,31 @@ $WR discover --book <bookId>                # 基于此书的相似推荐
 $WR discover --per-page 5
 ```
 
+## CLI 无法满足需求时：临时 Python 脚本
+
+当现有 CLI 子命令不覆盖所需功能时，可以编写临时 Python 脚本直接调用 `api.py` 模块。`api.py` 封装了所有接口，内置认证和版本上报。
+
+**流程：**
+1. 查阅 `references/` 下的文档了解接口结构和字段含义
+2. 阅读 `scripts/api.py` 确认可用的函数和签名
+3. 编写一个一次性 Python 脚本，import `api` 模块并调用对应函数
+4. 运行：`cd scripts && python3 -c "..."` 或写入 `/tmp/weread_temp.py`
+
+**示例 — 获取用户主页信息（CLI 尚未封装此功能）：**
+
+```bash
+cd scripts && python3 -c "
+import api, json
+result = api.get_profile()
+print(json.dumps(result, indent=2, ensure_ascii=False))
+"
+```
+
+**注意事项：**
+- 临时脚本无需持久化，用完即弃
+- 如发现该功能被反复使用，考虑将其加入 CLI 子命令
+- 始终先检查 CLI 是否已支持该功能，避免重复实现
+
 ## Agent 工作流规则
 
 1. **CLI 优先**：始终使用 `$WR <command>` 而非 curl/API 直调。CLI 已处理版本上报 `skill_version`、鉴权、errcode 检测、upgrade_info 处理。
@@ -124,7 +149,7 @@ $WR discover --per-page 5
 4. **书名查 bookId**：用户给书名时先 `$WR search <书名>` 拿到 bookId，再进行后续操作。
 5. **书架数量口诀**：`books.length + albums.length + (mp非空?1:0)` — CLI 已内置此逻辑。
 6. **阅读统计单位**：CLI 自动将秒转为小时/分钟，时间戳转为日期，评分 0-1000 转为百分制。
-7. **故障处理**：CLI 报错时检查 WEREAD_API_KEY 是否有效；若遇 upgrade_info 提示，按指引升级。
+7. **故障处理**：CLI 报错时检查 `WEREAD_API_KEY` 是否有效；若遇 upgrade_info 提示，按指引升级。
 
 ## 参考文档
 
@@ -132,14 +157,14 @@ $WR discover --per-page 5
 
 | 文档 | 说明 |
 |------|------|
-| `search.md` | 搜索 scope 选择、字段说明 |
-| `shelf.md` | 书架结构、数量口径、公开/私密规则 |
-| `book.md` | 书籍信息、章节目录、阅读进度字段 |
-| `notes.md` | 笔记统计口径、划线、想法、热门划线 |
-| `review.md` | 公开点评字段与类型 |
-| `readdata.md` | 阅读统计字段单位、周期组合 |
-| `discover.md` | 推荐接口字段说明 |
-| `profile.md` | 用户概况组合查询 |
+| `references/search.md` | 搜索 scope 选择、字段说明 |
+| `references/shelf.md` | 书架结构、数量口径、公开/私密规则 |
+| `references/book.md` | 书籍信息、章节目录、阅读进度字段 |
+| `references/notes.md` | 笔记统计口径、划线、想法、热门划线 |
+| `references/review.md` | 公开点评字段与类型 |
+| `references/readdata.md` | 阅读统计字段单位、周期组合 |
+| `references/discover.md` | 推荐接口字段说明 |
+| `references/profile.md` | 用户概况组合查询 |
 
 ## 已知 Pitfalls（API 与数据）
 
@@ -151,10 +176,10 @@ $WR discover --per-page 5
 | **star 字段可能为 float** | JSON 反序列化后 `star` 可能为 `100.0` 而非 `100`，必须 `int()` 后再做整除。CLI 已处理 | `/review/list`, `/review/list/mine` |
 | **review 列表需要 count/maxIdx** | 不传这两个参数时 `reviews` 数组可能为空（只返回统计摘要）。CLI 自动传 | `/review/list` |
 | **notes 全量拉取可能超时** | 书架 2000+ 本时有笔记的书很多，逐页拉到 `hasMore=0` 可能超时。CLI 默认限 5 页（250 本），通过 `--max-pages` 调整 | `/user/notebooks` |
-| **skill_version 需同步** | `weread.py` 内 `SKILL_VERSION` 常量与 SKILL.md frontmatter `version` 需保持同步。当前 CLI: 1.0.3, SKILL.md: 1.1.0 — 下次改 CLI 时对齐 | — |
+| **skill_version 需同步** | `weread.py` 内 `SKILL_VERSION` 常量与 SKILL.md frontmatter `version` 需保持同步 | — |
 
 ## CLI 开发
 
-脚本：`weread.py`（主 CLI）、`test_weread.py`（单元测试）。
+脚本：`scripts/weread.py`（主 CLI）、`scripts/api.py`（API 封装）、`scripts/test_weread.py`（单元测试）。
 
-运行测试：`cd ~/.hermes/skills/weread && python3 test_weread.py`
+运行测试：`cd scripts && python3 test_weread.py`

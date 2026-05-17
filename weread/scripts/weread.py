@@ -23,7 +23,7 @@ import urllib.error
 from typing import Any
 
 API_URL = "https://i.weread.qq.com/api/agent/gateway"
-SKILL_VERSION = "1.0.3"
+SKILL_VERSION = "1.2.0"
 
 # ─── utilities ───────────────────────────────────────────────────────
 
