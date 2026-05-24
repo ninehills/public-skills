@@ -1,6 +1,6 @@
 ---
 name: deslop-zh
-description: 整合式去 AI 味写作技能 — 覆盖中文技术文档、博客、社交媒体、发行说明、科学论文等多场景。统合 stop-slop、skill-deslop、tropes.fyi、anti-slop-writing、talk-normal、tech-doc-style-chinese、write、Wikipedia AI 特征等资源。当用户要求「去 AI 味」「改写」「润色」「写一段」「审稿」「翻译腔太重」或在写作/编辑场景中自然触发。
+description: 去除中文写作中的 AI 腔调，让文本像人写的而非模型生成的。覆盖博客、技术文档、推文、发行说明、科学论文等场景。触发词：去 AI 味、改写、润色、审稿、翻译腔重、像人写的、自然一点、polish
 metadata:
   trigger: 去AI味, 改写, 润色, 写一段, 审稿, 改稿, 翻译腔, 自然一点, 像人写的, 技术文档, 博客, 推文, 发行说明, release notes, 文章, polish, rewrite, de-AI, deslop
   sources:
