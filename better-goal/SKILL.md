@@ -1,6 +1,6 @@
 ---
 name: better-goal
-description: 为任意 coding agent 编写高质量任务目标的指南。当需要为复杂多轮任务（性能优化、调试、迁移、研究复现等）定义可验证的完成标准、约束条件和阻塞终止条件时使用。
+description: 为任意 coding agent 编写高质量任务目标的指南。当用户提到「设定目标」「goal」「任务目标」「持久目标」「完成标准」、或需要为复杂多轮任务（性能优化、调试、迁移、研究复现等）定义可验证的完成条件和约束时触发。
 version: 1.1.0
 source: https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex
 metadata:
