@@ -41,7 +41,7 @@ metadata:
 ## 编写模板
 
 ```
-<期望最终状态>，verified by <具体证据>，while preserving <约束条件>。
+/goal <期望最终状态> verified by <具体证据> while preserving <约束条件>。
 Use <允许的工具或边界>。
 Between iterations，<如何选择下一步>。
 If blocked or no valid paths remain，<报告内容和解锁条件>。
@@ -51,17 +51,17 @@ If blocked or no valid paths remain，<报告内容和解锁条件>。
 
 ### 性能优化
 
-弱：`Improve performance`
+弱：`/goal Improve performance`
 
-强：`Reduce p95 checkout latency below 120 ms, verified by the checkout benchmark, while keeping the correctness suite green. Use only the checkout service, benchmark fixtures, and related tests. Between iterations, record what changed, what the benchmark showed, and the next best experiment to try. If the benchmark cannot run or no valid paths remain, stop with the attempted paths, the evidence gathered, the blocker, and the next input needed.`
+强：`/goal Reduce p95 checkout latency below 120 ms, verified by the checkout benchmark, while keeping the correctness suite green. Use only the checkout service, benchmark fixtures, and related tests. Between iterations, record what changed, what the benchmark showed, and the next best experiment to try. If the benchmark cannot run or no valid paths remain, stop with the attempted paths, the evidence gathered, the blocker, and the next input needed.`
 
 关键差异：强目标命名了**结果（<120ms）、验证方式（checkout benchmark）、约束（correctness suite green）**。即使延迟从 180ms 降到 135ms，目标仍未完成；延迟达标但测试失败，目标也未完成；基准无法运行，必须报告阻塞而非宣告成功。
 
 ### 研究复现
 
-弱：`Reproduce Buehler et al., "Deep Hedging"`
+弱：`/goal Reproduce Buehler et al., "Deep Hedging"`
 
-强：`Produce the strongest evidence-backed reproduction of Buehler et al., "Deep Hedging," using the available paper materials and local resources. Attempt every headline result, verify the outputs, and end with a report that separates reproduced mechanics, approximate trained results, blocked exact replay, and remaining uncertainty.`
+强：`/goal Produce the strongest evidence-backed reproduction of Buehler et al., "Deep Hedging," using the available paper materials and local resources. Attempt every headline result, verify the outputs, and end with a report that separates reproduced mechanics, approximate trained results, blocked exact replay, and remaining uncertainty.`
 
 关键差异：强目标定义了证据标准（confirmed / approximate / blocked / uncertain 四层分级），防止"看似可行"的产物变成过度宣称的结论。
 
