@@ -1,6 +1,6 @@
 ---
 name: deslop-en
-description: Remove AI writing patterns from English prose. Covers blog posts, technical docs, social copy, release notes, scientific writing, and more. Trigger words: deslop, de-AI, make it sound human, remove AI patterns, fix slop, polish, rewrite, sound natural
+description: "Remove AI writing patterns from English prose. Covers blog posts, technical docs, social copy, release notes, scientific writing. Trigger: deslop, de-AI, make it sound human, remove AI patterns, fix slop, polish, rewrite, sound natural"
 metadata:
   trigger: deslop, de-AI, make it sound human, remove AI patterns, fix slop, sound natural, polish, rewrite, humanize, de-slop
   sources:
